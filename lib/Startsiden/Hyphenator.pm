@@ -5,6 +5,8 @@ use utf8;
 use Readonly;
 use TeX::Hyphen;
 
+our $VERSION = '1.00';
+
 # TODO add Memoization with memory limit
 
 has 'delim' => (
