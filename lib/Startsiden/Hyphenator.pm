@@ -2,7 +2,6 @@ package Startsiden::Hyphenator;
 
 use Moose;
 use utf8;
-use Readonly;
 use TeX::Hyphen;
 
 our $VERSION = '1.00';
@@ -106,3 +105,102 @@ sub hyphenate_word {
 }
 
 1;
+
+=head1 NAME
+
+Startsiden::Hyphenator - Hyphenate strings bases on LaTeX rules
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 SYNOPSIS   
+
+    use Startsiden::Hyphenator;
+
+    my $h = Startsiden::Hyphenator->new({ delim => ',', leftmin => 2, rightmin => 2 });
+
+    # 'Bul,jon,pakke,mes,ter,as,sis,tent'
+    $h->hyphenate('Buljonpakkemesterassistent');
+
+See tests for more inputs and expected outputs
+
+=head1 DESCRIPTION
+
+This module breaks up words and inserts a given delimiter (soft hyphen unicode character by default).
+It supports different arguments to decide how long a word should be before it should be hyphenated, 
+and what the minimum amount of characters should be on the left and right side of the word. You can
+also set the hyphenation sign it should use, and which language the hyphenation rules should follow.
+
+=head1 ATTRIBUTES
+
+=over
+
+=item delim
+
+What character to use as delimiter on the returning string
+
+=item threshold
+
+Threshold that decides how long a word should be before it is hyphenated
+
+=item language
+
+The hyphenation rules will be beased on this language (Default: Norwegian (no))
+
+=item file
+
+Which file to get the hyphenation rules from.
+Default: '/usr/share/texlive/texmf-dist/tex/generic/hyph-utf8/patterns/tex/hyph-' $self->language . '.tex'
+
+=item leftmin
+
+Minimum amount of characters should be left unhyphenated at the beginning (left) of the word.
+
+=item rightmin
+
+Minimum amount of characters should be left unhyphenated at the end (right) of the word.
+
+=item hyphenator
+
+The hyphenator object
+Default: TeX::Hyphen
+
+=back
+
+=head1 METHODS
+
+=over
+
+=item C<hyphenate($string, $delim, $threshold)>
+
+Returns a hyphenated string
+
+=back
+
+=head1 SEE ALSO
+
+=over 4
+
+=item * L<TeX::Hyphen>
+
+=back
+
+=head1 BUGS
+
+Please report any bugs or feature requests to http://bugs.startsiden.no/,
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Startsiden::Hyphenator
+
+=head1 AUTHOR
+
+Nicolas Mendoza, C<< <nicolas.mendoza@startsiden.no> >>
+
+=head1 COPYRIGHT & LICENSE
+
+All Rights reserved to ABC Startsiden © 2014
+
