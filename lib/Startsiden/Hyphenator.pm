@@ -28,7 +28,15 @@ has 'file' => (
   lazy => 1,
   default => sub {
       my ($self) = @_; 
-      return '/usr/share/texlive/texmf-dist/tex/generic/hyph-utf8/patterns/tex/hyph-' . $self->language . '.tex'; 
+
+      # squeeze, wheezy
+      my $pattern_dirs = [qw(
+          /usr/share/texmf-texlive/tex/generic/hyph-utf8/patterns/
+          /usr/share/texlive/texmf-dist/tex/generic/hyph-utf8/patterns/tex/
+      )];
+      foreach my $pattern_dir (@{$pattern_dirs}) {
+          return $pattern_dir . 'hyph-' . $self->language . '.tex' if -e $pattern_dir;
+      }
   },
 );
 
