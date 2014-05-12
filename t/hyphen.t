@@ -21,6 +21,9 @@ is($h->hyphenate('lalala '), 'lalala ', 'Helper works with ending space');
 my $h2 = Startsiden::Hyphenator->new({ delim => ',', threshold => 2 });
 is($h2->hyphenate('stjernen'), 'stjer,nen', 'Helper works using lower threshold');
 
+my $h3 = Startsiden::Hyphenator->new();
+is($h3->hyphenate("vitsetyveri"), "vitse\x{00AD}ty\x{00AD}veri", 'Correct default value');
+
 use Template;
 my $tt = Template->new(
    PLUGIN_BASE => 'Startsiden::Template::Plugin',
