@@ -10,7 +10,7 @@ our $VERSION = '1.02';
 
 has 'delim' => (
   is => 'rw',
-  default => "-\n",
+  default => "\x{00AD}",
 );
 
 has 'threshold' => (
@@ -146,20 +146,24 @@ also set the hyphenation sign it should use, and which language the hyphenation 
 
 =item delim
 
-What character to use as delimiter on the returning string
+What character to use as a delimiter on the returning string.
+Default: soft hyphen unicode character (\x0a)
 
 =item threshold
 
-Threshold that decides how long a word should be before it is hyphenated
+Threshold that decides how long a word should be before it is hyphenated, an integer describing amount of characters.
+Default: 10
 
 =item language
 
-The hyphenation rules will be beased on this language (Default: Norwegian (no))
+The hyphenation rules will be based on this language (Default: Norwegian (no))
 
 =item file
 
 Which file to get the hyphenation rules from.
 Default: '/usr/share/texlive/texmf-dist/tex/generic/hyph-utf8/patterns/tex/hyph-' $self->language . '.tex'
+         or '/usr/share/texmf-texlive/tex/generic/hyph-utf8/patterns/tex/hyph-' $self->language . '.tex'
+         depending on Debian version.
 
 =item leftmin
 
