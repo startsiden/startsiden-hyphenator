@@ -4,7 +4,7 @@ use Moose;
 use utf8;
 use TeX::Hyphen;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 # TODO add Memoization with memory limit
 
