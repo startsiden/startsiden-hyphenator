@@ -4,6 +4,7 @@ use warnings;
 use utf8;
 
 use Test::More;
+use Test::Memory::Cycle;
 
 use Startsiden::Hyphenator;
 
@@ -27,6 +28,8 @@ is($h3->hyphenate("vitsetyveri"), "vitse\x{00AD}ty\x{00AD}veri", 'Correct defaul
 use Template;
 my $tt = Template->new(
    PLUGIN_BASE => 'Startsiden::Template::Plugin',
+   ENCODING => 'utf8',
+   STRICT => 1,
 );
 
 my $output;
@@ -46,5 +49,22 @@ is($output3, '<b class="lol" style="color: #ff000">stjer,nen</b>', 'Plugin works
 my $output4;
 $tt->process(\q{[% USE Hyphenator "," 3; '<span>Bakgrunn: </span><span>Some text</span>' | hyphen %]}, undef, \$output4);
 is($output4, '<span>Bak,grunn: </span><span>Some text</span>', 'Plugin works using lower threshold and HTML');
+
+TODO: {
+    local $TODO = "Dynamic filter not implemented";
+    my $output5;
+    $tt->process(\q{[% USE Hyphenator; '<span>Bakgrunn: </span><span>Some text</span>' | hyphen(",", 3) %]}, undef, \$output5);
+    is($output5, '<span>Bak,grunn: </span><span>Some text</span>', 'Plugin works using lower threshold and HTML');
+
+    my $output6;
+    $tt->process(\q{[% USE Hyphenator delim = ",", threshold = 3 %][% '<span>Bakgrunn: </span><span>Some text</span>' | hyphen %]}, undef, \$output6);
+    is($output6, '<span>Bak,grunn: </span><span>Some text</span>', 'Plugin works using lower threshold and HTML and named parameters in use call');
+
+    my $output7;
+    $tt->process(\q{[% USE Hyphenator %][% FILTER $Hyphenator delim => ",", threshold => 3 %]<span>Bakgrunn: </span><span>Some text</span>[% END %]}, undef, \$output7);
+    is($output7, '<span>Bak,grunn: </span><span>Some text</span>', 'Plugin works using lower threshold and HTML, and named parameters in filter call');
+}
+
+memory_cycle_ok($tt, 'No memory cycles');
 
 done_testing;
