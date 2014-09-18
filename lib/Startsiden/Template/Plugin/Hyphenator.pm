@@ -8,6 +8,7 @@ use Startsiden::Hyphenator;
 # This will die if Template::Toolkit is not in use, but then this plugin is not needed.
 use Template::Plugin::Filter;
 use parent qw( Template::Plugin::Filter );
+use Scalar::Util;
 
 my $hyphenator;
 
@@ -18,6 +19,9 @@ sub init {
     $hyphenator ||= Startsiden::Hyphenator->new();
     $self->install_filter('hyphen');
 
+    Scalar::Util::weaken($self->{_CONTEXT});
+    Scalar::Util::weaken($self->{_STATIC_FILTER});
+
     return $self;
 }
 
@@ -25,6 +29,7 @@ sub filter {
     my ($self, $text) = @_;
 
     my $args      = $self->{_ARGS};
+
     my $delim     = $args->[0] || "\x{00AD}";
     my $threshold = $args->[1] || 10;
 
@@ -39,5 +44,9 @@ sub filter {
         return $hyphenator->hyphenate($text, $delim, $threshold);
     }
 }
+
+#package Startsiden::Template::Plugin::Hyphenator::DYNAMIC;
+
+#use parent qw( Template::Plugin::Hyphenator );
 
 1;

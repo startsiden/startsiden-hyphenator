@@ -14,6 +14,7 @@ configure_requires 'Module::Install' => 0;
 #requires 'Mojo::DOM';
 requires 'TeX::Hyphen';
 test_requires 'Test::More';
+test_requires 'Test::Memory::Cycle';
 dpkg_requires 'texlive-lang-norwegian';
 
 # Perl modules needed at run-time
