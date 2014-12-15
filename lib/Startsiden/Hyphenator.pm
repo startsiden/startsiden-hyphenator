@@ -4,7 +4,7 @@ use Moose;
 use utf8;
 use TeX::Hyphen;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 {
     no warnings 'redefine';
