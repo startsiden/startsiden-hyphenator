@@ -4,7 +4,22 @@ use Moose;
 use utf8;
 use TeX::Hyphen;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
+
+{
+    no warnings 'redefine';
+    # Override this as it had a nasty bug of using $& making a performance penalty for everyon
+    *TeX::Hyphen::make_result_list = sub {
+	my ($self, $result) = @_;
+	my @result = ();
+	my $i = 0;
+	while ($result =~ /(.)/g) {
+		push @result, $i if (int($1) % 2);
+		$i++;
+	}
+	@result;
+    };
+}
 
 # TODO add Memoization with memory limit
 
