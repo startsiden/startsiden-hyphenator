@@ -2,9 +2,9 @@ package Startsiden::Hyphenator;
 
 use Moose;
 use utf8;
-use TeX::Hyphen;
+use Text::Hyphen::No;
 
-our $VERSION = '1.04';
+our $VERSION = '1.06';
 
 # TODO add Memoization with memory limit
 
@@ -56,12 +56,11 @@ has 'hyphenator' => (
   default => sub {
     my $self = shift;
 
-    TeX::Hyphen->new(
-      'file' => $self->file,
-      'style' => 'czech',
-      leftmin => $self->leftmin,
-      rightmin => $self->rightmin,
-    ) or die 'Unable to load file: ' . $self->file() . q{. Did you install 'texlive-lang-norwegian' or similar?};
+    Text::Hyphen::No->new(
+      min_prefix => $self->leftmin,
+      min_suffix => $self->rightmin,
+      min_word   => $self->threshold,
+    );
   }
 );
 
@@ -101,6 +100,14 @@ sub hyphenate_word {
   $delim     ||= $self->delim;
 
   return $word if length $word < $threshold;
+
+  my $orig_threshold = $self->hyphenator->{min_word};
+  $self->hyphenator->{min_word} = $threshold;
+
+  $word = $self->hyphenator->hyphenate($word, $delim);
+  $self->hyphenator->{min_word} = $orig_threshold;
+
+  return $word;
 
   my $number = 0;
   my $pos;
