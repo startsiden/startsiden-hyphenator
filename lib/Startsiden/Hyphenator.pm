@@ -2,7 +2,7 @@ package Startsiden::Hyphenator;
 
 use Moose;
 use utf8;
-use Text::Hyphen;
+use Text::Hyphen::No;
 
 our $VERSION = '1.05';
 
@@ -56,7 +56,7 @@ has 'hyphenator' => (
   default => sub {
     my $self = shift;
 
-    Text::Hyphen->new(
+    Text::Hyphen::No->new(
       min_prefix => $self->leftmin,
       min_suffix => $self->rightmin,
       min_word   => $self->threshold,

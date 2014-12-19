@@ -13,7 +13,7 @@ is($h->hyphenate('Buljonpakkemesterassistent'), 'Bul,jon,pakke,mes,ter,as,sis,te
 is($h->hyphenate('En del små ord som aldri blir delt'), 'En del små ord som aldri blir delt', 'Helper does not interfere with small words');
 is($h->hyphenate('Seinfeld beskylder Lego-filmen for vitsetyveri'),  'Seinfeld beskylder Lego-filmen for vitse,ty,ve,ri', 'Words already hyphenated should not get two consecutive dashes');
 
-is($h->hyphenate('- Æsjabæsj, sa mannen'), "–\x{00A0}Æ,sjabæ,sj, sa mannen", 'Citation fix-up, so that it does not wrap');
+is($h->hyphenate('- Æsjabæsj, sa mannen'), "–\x{00A0}Æsjabæsj, sa mannen", 'Citation fix-up, so that it does not wrap');
 
 is($h->hyphenate('lalala - lalala'), 'lalala - lalala', 'Helper works with spaces and dashes');
 
