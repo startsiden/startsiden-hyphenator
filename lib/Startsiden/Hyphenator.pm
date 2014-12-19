@@ -2,24 +2,9 @@ package Startsiden::Hyphenator;
 
 use Moose;
 use utf8;
-use TeX::Hyphen;
+use Text::Hyphen;
 
 our $VERSION = '1.05';
-
-{
-    no warnings 'redefine';
-    # Override this as it had a nasty bug of using $& making a performance penalty for everyon
-    *TeX::Hyphen::make_result_list = sub {
-	my ($self, $result) = @_;
-	my @result = ();
-	my $i = 0;
-	while ($result =~ /(.)/g) {
-		push @result, $i if (int($1) % 2);
-		$i++;
-	}
-	@result;
-    };
-}
 
 # TODO add Memoization with memory limit
 
@@ -71,12 +56,11 @@ has 'hyphenator' => (
   default => sub {
     my $self = shift;
 
-    TeX::Hyphen->new(
-      'file' => $self->file,
-      'style' => 'czech',
-      leftmin => $self->leftmin,
-      rightmin => $self->rightmin,
-    ) or die 'Unable to load file: ' . $self->file() . q{. Did you install 'texlive-lang-norwegian' or similar?};
+    Text::Hyphen->new(
+      min_prefix => $self->leftmin,
+      min_suffix => $self->rightmin,
+      min_word   => $self->threshold,
+    );
   }
 );
 
@@ -116,6 +100,14 @@ sub hyphenate_word {
   $delim     ||= $self->delim;
 
   return $word if length $word < $threshold;
+
+  my $orig_threshold = $self->hyphenator->{min_word};
+  $self->hyphenator->{min_word} = $threshold;
+
+  $word = $self->hyphenator->hyphenate($word, $delim);
+  $self->hyphenator->{min_word} = $orig_threshold;
+
+  return $word;
 
   my $number = 0;
   my $pos;
