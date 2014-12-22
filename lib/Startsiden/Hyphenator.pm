@@ -1,5 +1,7 @@
 package Startsiden::Hyphenator;
 
+use English qw/-no_match_vars/;
+use Module::Load;
 use Moose;
 use utf8;
 use Text::Hyphen::No;
@@ -23,23 +25,6 @@ has 'language' => (
   default => 'no',
 );
 
-has 'file' => (
-  is => 'rw',
-  lazy => 1,
-  default => sub {
-      my ($self) = @_; 
-
-      # squeeze, wheezy
-      my $pattern_dirs = [qw(
-          /usr/share/texmf-texlive/tex/generic/hyph-utf8/patterns/
-          /usr/share/texlive/texmf-dist/tex/generic/hyph-utf8/patterns/tex/
-      )];
-      foreach my $pattern_dir (@{$pattern_dirs}) {
-          return $pattern_dir . 'hyph-' . $self->language . '.tex' if -e $pattern_dir;
-      }
-  },
-);
-
 has 'leftmin' => (
   is => 'rw',
   default => 3, 
@@ -56,7 +41,16 @@ has 'hyphenator' => (
   default => sub {
     my $self = shift;
 
-    Text::Hyphen::No->new(
+    my $module = 'Text::Hyphen::' . ucfirst $self->language;
+
+    eval { 
+       Module::Load::load $module;
+       1;
+    } or do {
+       die "Error loading '$module', language '" . $self->language . "' not supported: $EVAL_ERROR";
+    };
+
+    return $module->new(
       min_prefix => $self->leftmin,
       min_suffix => $self->rightmin,
       min_word   => $self->threshold,
