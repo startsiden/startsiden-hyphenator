@@ -6,7 +6,7 @@ use Moose;
 use utf8;
 use Text::Hyphen::No;
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 my %TRIE_CACHE = ();
 
