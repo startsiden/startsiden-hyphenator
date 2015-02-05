@@ -1,25 +1,14 @@
 package Startsiden::Hyphenator;
 
+use English qw/-no_match_vars/;
+use Module::Load;
 use Moose;
 use utf8;
-use TeX::Hyphen;
+use Text::Hyphen::No;
 
-our $VERSION = '1.05';
+our $VERSION = '1.07';
 
-{
-    no warnings 'redefine';
-    # Override this as it had a nasty bug of using $& making a performance penalty for everyon
-    *TeX::Hyphen::make_result_list = sub {
-	my ($self, $result) = @_;
-	my @result = ();
-	my $i = 0;
-	while ($result =~ /(.)/g) {
-		push @result, $i if (int($1) % 2);
-		$i++;
-	}
-	@result;
-    };
-}
+my %TRIE_CACHE = ();
 
 # TODO add Memoization with memory limit
 
@@ -38,23 +27,6 @@ has 'language' => (
   default => 'no',
 );
 
-has 'file' => (
-  is => 'rw',
-  lazy => 1,
-  default => sub {
-      my ($self) = @_; 
-
-      # squeeze, wheezy
-      my $pattern_dirs = [qw(
-          /usr/share/texmf-texlive/tex/generic/hyph-utf8/patterns/
-          /usr/share/texlive/texmf-dist/tex/generic/hyph-utf8/patterns/tex/
-      )];
-      foreach my $pattern_dir (@{$pattern_dirs}) {
-          return $pattern_dir . 'hyph-' . $self->language . '.tex' if -e $pattern_dir;
-      }
-  },
-);
-
 has 'leftmin' => (
   is => 'rw',
   default => 3, 
@@ -71,12 +43,32 @@ has 'hyphenator' => (
   default => sub {
     my $self = shift;
 
-    TeX::Hyphen->new(
-      'file' => $self->file,
-      'style' => 'czech',
-      leftmin => $self->leftmin,
-      rightmin => $self->rightmin,
-    ) or die 'Unable to load file: ' . $self->file() . q{. Did you install 'texlive-lang-norwegian' or similar?};
+    my $module = 'Text::Hyphen::' . ucfirst $self->language;
+
+    eval { 
+       Module::Load::load $module;
+       my $orig = \&Text::Hyphen::_load_patterns; 
+           # Text::Hyphen recreates its trie on every instance
+           # We avoid this be caching it per language
+           { 
+               no warnings 'redefine';
+               *Text::Hyphen::_load_patterns = sub { 
+               my $self = $_[0]; 
+               $TRIE_CACHE{$module} && return $self->{trie} = $TRIE_CACHE{$module}; 
+               $orig->(@_); 
+               $TRIE_CACHE{$module} = $_[0]->{trie}; 
+           };
+       };
+       1;
+    } or do {
+       die "Error loading '$module', language '" . $self->language . "' not supported: $EVAL_ERROR";
+    };
+
+    return $module->new(
+      min_prefix => $self->leftmin,
+      min_suffix => $self->rightmin,
+      min_word   => $self->threshold,
+    );
   }
 );
 
@@ -116,6 +108,14 @@ sub hyphenate_word {
   $delim     ||= $self->delim;
 
   return $word if length $word < $threshold;
+
+  my $orig_threshold = $self->hyphenator->{min_word};
+  $self->hyphenator->{min_word} = $threshold;
+
+  $word = $self->hyphenator->hyphenate($word, $delim);
+  $self->hyphenator->{min_word} = $orig_threshold;
+
+  return $word;
 
   my $number = 0;
   my $pos;
