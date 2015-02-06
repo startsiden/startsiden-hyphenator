@@ -74,7 +74,7 @@ sub new {
 
     bless $self, $class;
 
-    $VAR1 || $self->_load_patterns;
+    $VAR1 || $self->_load_patterns && ($VAR1 = $self->{trie});
 
     return $self;
 }
