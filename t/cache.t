@@ -1,3 +1,6 @@
+use strict;
+use warnings;
+
 use Startsiden::Hyphenator;
 use Test::More;
 use Time::HiRes qw(time);
@@ -21,7 +24,7 @@ my $elapsed_loop = $loop_stop - $loop_start;
 ok(
    (2*$elapsed_one) > $elapsed_loop, 
    sprintf "%d consecutive hyphens, should be faster than 2x one hyphenation: %.3f > %.3f", 
-       ($loop, $elapsed_one, $elapsed_loop)
+       ($loops, $elapsed_one, $elapsed_loop)
 ); 
 
 done_testing;
