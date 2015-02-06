@@ -4,6 +4,7 @@ use warnings;
 use Startsiden::Hyphenator;
 use Test::More;
 use Time::HiRes qw(time);
+delete $INC{'Text/Hyphen/No_pregen.pm'};
 
 my $start = time;
 my $h = Startsiden::Hyphenator->new(delim => ',', language => 'no_pregen');
