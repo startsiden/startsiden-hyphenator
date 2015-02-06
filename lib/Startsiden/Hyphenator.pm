@@ -2,13 +2,11 @@ package Startsiden::Hyphenator;
 
 use English qw/-no_match_vars/;
 use Module::Load;
-use Moose;
+use Moo;
 use utf8;
-use Text::Hyphen::No;
+use Text::Hyphen::No_pregen;
 
 our $VERSION = '1.07';
-
-my %TRIE_CACHE = ();
 
 # TODO add Memoization with memory limit
 
@@ -24,7 +22,7 @@ has 'threshold' => (
 
 has 'language' => (
   is => 'rw',
-  default => 'no',
+  default => 'no_pregen',
 );
 
 has 'leftmin' => (
@@ -47,18 +45,6 @@ has 'hyphenator' => (
 
     eval { 
        Module::Load::load $module;
-       my $orig = \&Text::Hyphen::_load_patterns; 
-           # Text::Hyphen recreates its trie on every instance
-           # We avoid this be caching it per language
-           { 
-               no warnings 'redefine';
-               *Text::Hyphen::_load_patterns = sub { 
-               my $self = $_[0]; 
-               $TRIE_CACHE{$module} && return $self->{trie} = $TRIE_CACHE{$module}; 
-               $orig->(@_); 
-               $TRIE_CACHE{$module} = $_[0]->{trie}; 
-           };
-       };
        1;
     } or do {
        die "Error loading '$module', language '" . $self->language . "' not supported: $EVAL_ERROR";

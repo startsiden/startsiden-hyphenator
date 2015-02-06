@@ -1,4 +1,4 @@
-package Text::Hyphen::En-us;
+package Text::Hyphen::En_US;
 
 use strict;
 use warnings;

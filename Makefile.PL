@@ -11,9 +11,10 @@ all_from 'lib/Startsiden/Hyphenator.pm';
 
 configure_requires 'Module::Install' => 0;
 
-#requires 'Mojo::DOM';
-#requires 'TeX::Hyphen';
 requires 'Text::Hyphen';
+requires 'Module::Load';
+requires 'Moo';
+
 test_requires 'Test::More';
 test_requires 'Test::Memory::Cycle';
 #dpkg_requires 'texlive-lang-norwegian';
