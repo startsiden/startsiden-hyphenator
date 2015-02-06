@@ -6,7 +6,7 @@ use Moo;
 use utf8;
 use Text::Hyphen::No_pregen;
 
-our $VERSION = '1.07';
+our $VERSION = '1.08';
 
 # TODO add Memoization with memory limit
 
