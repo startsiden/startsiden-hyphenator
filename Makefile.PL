@@ -11,6 +11,7 @@ all_from 'lib/Startsiden/Hyphenator.pm';
 
 configure_requires 'Module::Install' => 0;
 
+requires 'Template';
 requires 'Text::Hyphen';
 requires 'Module::Load';
 requires 'Moo';
