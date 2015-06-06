@@ -35,7 +35,7 @@ sub filter {
 
     if ($self->{has_mojo_dom}) {
         my $d = Mojo::DOM->new($text);
-        if (defined Mojo::DOM->can('descendant_nodes')) {
+        if ($d->can('descendant_nodes')) {
             $d->descendant_nodes->map( sub {
                 $_->content( $hyphenator->hyphenate($_->content, $delim, $threshold) ) if $_->type eq 'text';
             });
