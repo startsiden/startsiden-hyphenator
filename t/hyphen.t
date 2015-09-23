@@ -17,7 +17,11 @@ is($h->hyphenate('- Æsjabæsj, sa mannen'), "–\x{00A0}Æsjabæsj, sa mannen",
 
 is($h->hyphenate('lalala - lalala'), 'lalala - lalala', 'Helper works with spaces and dashes');
 
-is($h->hyphenate('lalala '), 'lalala ', 'Helper works with ending space');
+is($h->hyphenate('lalala  '), 'lalala  ', 'Helper works with ending space');
+
+is($h->hyphenate('  lalala'), '  lalala', 'Helper works with starting space');
+
+is($h->hyphenate(' lalala '), ' lalala ', 'Helper works with both starting and ending space');
 
 my $h2 = Startsiden::Hyphenator->new({ delim => ',', threshold => 2 });
 is($h2->hyphenate('stjernen'), 'stjer,nen', 'Helper works using lower threshold');

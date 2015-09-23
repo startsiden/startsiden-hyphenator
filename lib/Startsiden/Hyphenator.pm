@@ -64,13 +64,16 @@ sub hyphenate {
   $threshold ||= $self->threshold;
   $delim     ||= $self->delim;
 
-  # trim and store leading space
-  $text =~ m{ \A (\s+)    }gmx;
-  my $prefix_space  = $1 || q{};
+  # store leading space
+  my ($prefix_space)  = $text =~ m{ \A (\s+) }mx;
+  $prefix_space //= '';
 
-  # trim and store trailing space
-  $text =~ m{    (\s+) \z }gmx;
-  my $postfix_space = $1 || q{};
+  # store trailing space
+  my ($postfix_space) = $text =~ m{ (\s+) \z }mx;
+  $postfix_space //= '';
+
+  # trim leading and trailing space
+  $text =~ s/ \A (\s+) | (\s+) \z//gmx;
 
   # replace em dashes and hyphens with trailing non-breaking space to avoid ending up with the hyphen on its own line
   $text =~ s{ \A ([-–]) \s+ }{–\xa0}gmx;
