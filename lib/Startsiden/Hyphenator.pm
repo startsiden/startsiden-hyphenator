@@ -73,7 +73,7 @@ sub hyphenate {
   $postfix_space //= '';
 
   # trim leading and trailing space
-  $text =~ s/ \A \s+ | \s+ \z//gmx;
+  $text =~ s/^\s+|\s+$//g;
 
   # replace em dashes and hyphens with trailing non-breaking space to avoid ending up with the hyphen on its own line
   $text =~ s{ \A ([-–]) \s+ }{–\xa0}gmx;
