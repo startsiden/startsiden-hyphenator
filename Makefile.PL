@@ -14,6 +14,7 @@ configure_requires 'Module::Install' => 0;
 requires 'Template';
 requires 'Text::Hyphen';
 requires 'Module::Load';
+requires 'Mojo::Dom';
 requires 'Moo';
 
 test_requires 'Test::More';
