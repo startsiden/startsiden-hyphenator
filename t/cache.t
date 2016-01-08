@@ -7,6 +7,11 @@ use Time::HiRes qw(time);
 
 my $start = time;
 my $h = Startsiden::Hyphenator->new(delim => ',', language => 'no');
+
+unless ( $h->is_enabled ) {
+    plan skip_all => 'Hyphenator is disabled';
+}
+
 is $h->hyphenate('kjempelangt'), 'kjempe,langt', 'Correct hyphenation';
 my $stop = time;
 
@@ -22,10 +27,10 @@ my $elapsed_one  = $stop - $start;
 my $elapsed_loop = $loop_stop - $loop_start;
 
 ok(
-   ($elapsed_loop < (2*$elapsed_one)), 
-   sprintf "%d consecutive hyphens, should be faster than 2x one hyphenation: %.3f < 2 x %.3f", 
+   ($elapsed_loop < (2*$elapsed_one)),
+   sprintf "%d consecutive hyphens, should be faster than 2x one hyphenation: %.3f < 2 x %.3f",
        ($loops, $elapsed_loop, $elapsed_one)
-); 
+);
 
 # pre-generated language
 my $p_start = time;

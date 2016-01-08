@@ -1,14 +1,21 @@
 package Startsiden::Hyphenator;
+use Moose;
+use namespace::autoclean;
 
 use English qw/-no_match_vars/;
 use Module::Load;
-use Moo;
-use utf8;
 use Text::Hyphen::No_pregen;
+use utf8;
 
 our $VERSION = '1.13';
 
 # TODO add Memoization with memory limit
+
+has 'is_enabled' => (
+    isa     => 'Bool',
+    is      => 'ro',
+    default => 0,
+);
 
 has 'delim' => (
   is => 'rw',
@@ -27,12 +34,12 @@ has 'language' => (
 
 has 'leftmin' => (
   is => 'rw',
-  default => 3, 
+  default => 3,
 );
 
 has 'rightmin' => (
   is => 'rw',
-  default => 3, 
+  default => 3,
 );
 
 has 'hyphenator' => (
@@ -43,7 +50,7 @@ has 'hyphenator' => (
 
     my $module = 'Text::Hyphen::' . ucfirst $self->language;
 
-    eval { 
+    eval {
        Module::Load::load $module;
        1;
     } or do {
@@ -60,6 +67,10 @@ has 'hyphenator' => (
 
 sub hyphenate {
   my ($self, $text, $delim, $threshold) = @_;
+
+  unless ( $self->is_enabled ) {
+    return $text;
+  }
 
   $threshold ||= $self->threshold;
   $delim     ||= $self->delim;
@@ -80,12 +91,12 @@ sub hyphenate {
 
   # split on spaces and tabs, then on dashes, words might be hyphenated already
   # and join again after running hyphenation on it
-  $text = join ' ', map { 
-      join '-', map { 
-          $self->hyphenate_word($_, $delim, $threshold) 
+  $text = join ' ', map {
+      join '-', map {
+          $self->hyphenate_word($_, $delim, $threshold)
       } $_ eq "-" ? ("-") : split /-/, $_;
   # Note only " " and \t, so that other types of spaces (like non-breaking space \xa0 doesn't match)
-  } split m{[ \t]}, $text; 
+  } split m{[ \t]}, $text;
 
   return join '', $prefix_space, $text, $postfix_space;
 }
@@ -116,6 +127,8 @@ sub hyphenate_word {
   return $word;
 }
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 =head1 NAME
@@ -124,9 +137,9 @@ Startsiden::Hyphenator - Hyphenate strings bases on LaTeX rules
 
 =head1 VERSION
 
-Version 0.01
+Version 1.13
 
-=head1 SYNOPSIS   
+=head1 SYNOPSIS
 
     use Startsiden::Hyphenator;
 
@@ -140,7 +153,7 @@ See tests for more inputs and expected outputs
 =head1 DESCRIPTION
 
 This module breaks up words and inserts a given delimiter (soft hyphen unicode character by default).
-It supports different arguments to decide how long a word should be before it should be hyphenated, 
+It supports different arguments to decide how long a word should be before it should be hyphenated,
 and what the minimum amount of characters should be on the left and right side of the word. You can
 also set the hyphenation sign it should use, and which language the hyphenation rules should follow.
 

@@ -11,13 +11,14 @@ all_from 'lib/Startsiden/Hyphenator.pm';
 
 configure_requires 'Module::Install' => 0;
 
+requires 'Module::Load';
+requires 'Moose';
 requires 'Template';
 requires 'Text::Hyphen';
-requires 'Module::Load';
-requires 'Moo';
 
-test_requires 'Test::More';
 test_requires 'Test::Memory::Cycle';
+test_requires 'Test::More';
+
 #dpkg_requires 'texlive-lang-norwegian';
 
 # Perl modules needed at run-time

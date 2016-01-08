@@ -9,6 +9,11 @@ use Test::Memory::Cycle;
 use Startsiden::Hyphenator;
 
 my $h = Startsiden::Hyphenator->new({ delim => ',', leftmin => 2, rightmin => 2 });
+
+unless ( $h->is_enabled ) {
+    plan skip_all => 'Hyphenator is disabled';
+}
+
 is($h->hyphenate('Buljonpakkemesterassistent'), 'Bul,jon,pakke,mes,ter,as,sis,tent', 'Helper works');
 is($h->hyphenate('En del små ord som aldri blir delt'), 'En del små ord som aldri blir delt', 'Helper does not interfere with small words');
 is($h->hyphenate('Seinfeld beskylder Lego-filmen for vitsetyveri'),  'Seinfeld beskylder Lego-filmen for vitse,ty,ve,ri', 'Words already hyphenated should not get two consecutive dashes');

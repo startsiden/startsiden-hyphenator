@@ -6,6 +6,12 @@ use Test::More;
 use Startsiden::Hyphenator;
 use Template;
 
+my $h = Startsiden::Hyphenator->new;
+
+unless ( $h->is_enabled ) {
+    plan skip_all => 'Hyphenator is disabled';
+}
+
 my $tt = Template->new(
    PLUGINS => {hyphenator => 'Startsiden::Template::Plugin::Hyphenator'},
 );
