@@ -12,6 +12,7 @@ all_from 'lib/Startsiden/Hyphenator.pm';
 configure_requires 'Module::Install' => 0;
 
 requires 'Module::Load';
+requires 'Mojo::DOM';
 requires 'Moose';
 requires 'Template';
 requires 'Text::Hyphen';
