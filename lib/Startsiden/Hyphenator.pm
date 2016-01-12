@@ -7,7 +7,7 @@ use Module::Load;
 use Text::Hyphen::No_pregen;
 use utf8;
 
-our $VERSION = '1.14';
+our $VERSION = '1.15';
 
 # TODO add Memoization with memory limit
 
