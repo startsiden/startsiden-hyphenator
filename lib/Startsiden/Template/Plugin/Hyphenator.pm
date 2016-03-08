@@ -16,7 +16,9 @@ sub init {
     my ($self) = @_;
     $self->{has_mojo_dom} = eval { require Mojo::DOM; 1; };
     warn "Mojo::DOM not found, will not be able to hyphenate HTML" unless $self->{has_mojo_dom};
-    $hyphenator ||= Startsiden::Hyphenator->new();
+    $hyphenator ||= Startsiden::Hyphenator->new(
+        is_enabled => $self->{_CONTEXT}->config->{CONSTANTS}->{hyphenation_enabled},
+    );
     $self->install_filter('hyphen');
 
     Scalar::Util::weaken($self->{_CONTEXT});
