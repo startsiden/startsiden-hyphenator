@@ -1,0 +1,82 @@
+{
+   "abstract" : "Hyphenate strings bases on LaTeX rules",
+   "author" : [
+      "Nicolas Mendoza, C<< <nicolas.mendoza@startsiden.no> >>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Milla version v1.0.16, Dist::Zilla version 6.006, CPAN::Meta::Converter version 2.150005",
+   "license" : [
+      "restricted"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "Startsiden-Hyphenator",
+   "no_index" : {
+      "directory" : [
+         "eg",
+         "examples",
+         "inc",
+         "share",
+         "t",
+         "xt"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.59",
+            "Module::Install" : "0",
+            "Test::Memory::Cycle" : "0",
+            "Test::More" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build::Tiny" : "0.034"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Dist::Milla" : "v1.0.16",
+            "Test::Pod" : "1.41"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Module::Load" : "0",
+            "Mojo::DOM" : "0",
+            "Moose" : "0",
+            "Template" : "0",
+            "Text::Hyphen" : "0",
+            "namespace::autoclean" : "0",
+            "perl" : "5.010001"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/startsiden/startsiden-hyphenator/issues"
+      },
+      "homepage" : "https://github.com/startsiden/startsiden-hyphenator",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/startsiden/startsiden-hyphenator.git",
+         "web" : "https://github.com/startsiden/startsiden-hyphenator"
+      }
+   },
+   "version" : "1.15",
+   "x_contributors" : [
+      "dagfinnr <dagfinn@reiersol.com>",
+      "dagfinnr <dagfinn@startsiden.no>",
+      "dreamyguy <i@dreamyguy.com>",
+      "espizo <espen.borgen@startsiden.no>",
+      "msetek <martin@setek.org>",
+      "Nicolas Mendoza <mendoza@pvv.ntnu.no>",
+      "Tore Aursand <toreau@gmail.com>"
+   ],
+   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0217"
+}
+
