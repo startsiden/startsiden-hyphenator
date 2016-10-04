@@ -131,6 +131,8 @@ __PACKAGE__->meta->make_immutable;
 
 1;
 
+=encoding utf-8
+
 =head1 NAME
 
 Startsiden::Hyphenator - Hyphenate strings bases on LaTeX rules
