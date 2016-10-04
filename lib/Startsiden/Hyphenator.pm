@@ -157,6 +157,11 @@ It supports different arguments to decide how long a word should be before it sh
 and what the minimum amount of characters should be on the left and right side of the word. You can
 also set the hyphenation sign it should use, and which language the hyphenation rules should follow.
 
+By default, the hyphenator inserts soft hyphens (http://www.fileformat.info/info/unicode/char/00AD/index.htm). This can be changed when including the plugin:
+    [% USE Hyphenator ","; "menneskerettighetsorganisasjonssekretærkursmateriellet" | hyphen %]
+
+For usage examples, check out the tests. Such as https://github.com/startsiden/startsiden-hyphenator/blob/master/t/hyphen.t#L11 and https://github.com/startsiden/startsiden-hyphenator/blob/master/t/hyphen-s#
+
 =head1 ATTRIBUTES
 
 =over
